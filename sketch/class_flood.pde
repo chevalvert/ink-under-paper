@@ -2,7 +2,7 @@ class Flood {
   public int ID;
   private Maze maze;
   private ArrayList<Cell> cells;
-  private boolean done;
+  public boolean done, active;
 
   Flood(Maze maze, int id) {
     this(maze, id, 0, 0);
@@ -13,7 +13,7 @@ class Flood {
     this.done = false;
     this.maze = maze;
     this.cells = new ArrayList<Cell>();
-
+    this.active = false;
     this.cells.add(this.maze.get(i, j));
   }
 
@@ -26,10 +26,9 @@ class Flood {
 
       if (cell.floodID < 0) {
         cell.floodID = this.ID;
-
+        cell.lifespan = 255;
         int assimilatedFloodID = addNeighbors(cell, tmp);
         if (assimilatedFloodID >= 0) {
-          // println(this.ID + " assimilate " + assimilatedFloodID);
           ArrayList<Cell> assimilatedCells = this.assimilate(assimilatedFloodID);
           if (assimilatedCells != null) tmp.addAll(assimilatedCells);
         }

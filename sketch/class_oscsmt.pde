@@ -26,7 +26,9 @@ public class SMTOSC {
     }
   }
 
-  public ArrayList<Finger> getFingers() { return this.fingers; }
+  public Finger[] getFingers() {
+    return this.fingers.toArray(new Finger[this.fingers.size()]);
+  }
 
   public class Finger {
     public int id, x, y;

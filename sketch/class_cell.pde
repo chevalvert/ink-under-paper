@@ -1,15 +1,18 @@
 public class Cell {
-  int x, y, floodID;
+  public int x, y, floodID;
+  public float lifespan;
 
-  boolean visited;
-  boolean[] walls;
-  Cell source;
+  public boolean visited;
+  public boolean[] walls;
+  public Cell source;
 
   Cell(int x, int y) {
     this.x = x;
     this.y = y;
     this.visited = false;
+    this.lifespan = 255;
     this.floodID = -1;
+
     boolean[] walls = {true, true, true, true};
     this.walls = walls;
   }
