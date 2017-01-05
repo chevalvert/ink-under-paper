@@ -1,6 +1,6 @@
 public class Cell {
   public int x, y, floodID;
-  public float lifespan;
+  public int lifespan = CELL_LIFESPAN_START;
 
   public boolean visited;
   public boolean[] walls;
@@ -10,7 +10,6 @@ public class Cell {
     this.x = x;
     this.y = y;
     this.visited = false;
-    this.lifespan = 255;
     this.floodID = -1;
 
     boolean[] walls = {true, true, true, true};

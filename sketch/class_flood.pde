@@ -1,8 +1,9 @@
 class Flood {
-  public int ID;
+  public int ID, size;
   private Maze maze;
   private ArrayList<Cell> cells;
   public boolean done, active;
+  public float growCounter;
 
   Flood(Maze maze, int id) {
     this(maze, id, 0, 0);
@@ -15,6 +16,8 @@ class Flood {
     this.cells = new ArrayList<Cell>();
     this.active = false;
     this.cells.add(this.maze.get(i, j));
+    this.growCounter = 1;
+    this.size = 0;
   }
 
   // increase the flood boundary by one iteration
@@ -26,7 +29,7 @@ class Flood {
 
       if (cell.floodID < 0) {
         cell.floodID = this.ID;
-        cell.lifespan = 255;
+        cell.lifespan = CELL_LIFESPAN_START;
         int assimilatedFloodID = addNeighbors(cell, tmp);
         if (assimilatedFloodID >= 0) {
           ArrayList<Cell> assimilatedCells = this.assimilate(assimilatedFloodID);
@@ -35,11 +38,24 @@ class Flood {
       }
     }
 
-    if (this.cells.size() == 0) return this.done = true;
-    else {
+    if (this.cells.size() == 0) {
+      this.size = 0;
+      return this.done = true;
+    } else {
       this.cells = tmp;
+      this.size += tmp.size();
       return false;
     }
+  }
+
+  // grow the flood by a growRate between 0 and 1
+  public boolean grow(float growRate) {
+    this.growCounter += growRate;
+
+    if (this.growCounter >= 1) {
+      this.growCounter = 0;
+      return this.step();
+    } else return false;
   }
 
   // cheat by digging a new wall in the flood boundary
@@ -83,7 +99,7 @@ class Flood {
       if (n != null) {
         if (n.floodID < 0) {
           if (!cell.walls[i]) arr.add(n);
-        } else if (n.floodID != this.ID) return n.floodID;
+        } else if (n.floodID != this.ID && n.lifespan > CELL_LIFESPAN_DEATH) return n.floodID;
       }
     }
     return -1;
@@ -94,7 +110,6 @@ class Flood {
   private ArrayList<Cell> assimilate(int id) {
     Flood f = this.maze.floods.get(id);
     if (f != null) {
-      // for (Cell c : f.cells) c.floodID = this.ID;
       for (Cell c : this.maze.cells) {
         if (c.floodID == id) c.floodID = this.ID;
       }

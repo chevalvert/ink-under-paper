@@ -52,6 +52,7 @@ public void oscEvent(OscMessage message) {
         float y = message.get(2).floatValue();
 
         smtosc.move(id, int(x * width), int(y * height));
+        if (DEBUG) println(x + ", " + y);
       }
     }
   }

@@ -1,18 +1,38 @@
+// global options, see README for details
+boolean FULLSCREEN = false;
+boolean DEBUG = true;
+
+color COLOR_ALIVE = color(0, 0, 0, 255);
+color COLOR_DEAD  = color(255, 200, 200, -100);
+
+int CELL_LIFESPAN_MAX = 255;
+int CELL_LIFESPAN_DEATH = 200;
+int CELL_LIFESPAN_START = 100;
+int CELL_LIFESPAN_INCREMENT = +5;
+int CELL_LIFESPAN_DECREMENT = -1;
+
+float GROW_RATE_MIN = 0.5;
+float GROW_RATE_MAX = 1.0;
+
+// -------------------------------------------------------------------------
+
 Maze maze;
 PGraphics frame;
 SMTOSC smtosc;
 
 void settings() {
-  // size(800, 800, OPENGL);
-  fullScreen(OPENGL);
+  if (FULLSCREEN) fullScreen(OPENGL);
+  else size(displayWidth - 100, displayHeight - 50, OPENGL);
 }
 
 void setup() {
+  if (!DEBUG) noCursor();
+
   smtosc = new SMTOSC(this, "127.0.0.1", 12000);
 
   // maze generation
-  int cols = int(width / 5);
-  int rows = int(height / 5);
+  int cols = int(width / 10);
+  int rows = int(height / 10);
   maze = new Maze(cols, rows, int(cols / 2), 0);
 
   // ultra fast offscren pixels update
@@ -27,8 +47,7 @@ void setup() {
 
 void draw() {
   if (!maze.done) {
-
-    surface.setTitle(int(map(maze.visits, 0, maze.cells.length, 0, 100)) + "%");
+    if (!FULLSCREEN) surface.setTitle(int(map(maze.visits, 0, maze.cells.length, 0, 100)) + "%");
 
     // maze generation
     for (int i = 0; i < 100; i++) maze.done = maze.step();
@@ -43,18 +62,20 @@ void draw() {
     image(frame.get(), 0, 0, width, height);
 
   } else {
-
-    surface.setTitle(int(frameRate) + "fps");
+    if (!FULLSCREEN) surface.setTitle(int(frameRate) + "fps");
+    background(255);
 
     // reset floods active states
     for (Flood f : maze.floods) {
       if (f != null) f.active = false;
     }
 
+    // touch event
     for (SMTOSC.Finger f : smtosc.getFingers()) touch(f.x, f.y, true);
     smtosc.update();
 
-    // if (mousePressed) touch(mouseX, mouseY, true);
+    // DEBUG
+    if (DEBUG && mousePressed) touch(mouseX, mouseY, true);
 
     // display flooded maze cells
     frame.loadPixels();
@@ -67,13 +88,18 @@ void draw() {
         Flood parent = maze.floods.get(c.floodID);
         if (parent != null) {
           if (parent.active) {
-            if (c.lifespan < 1000) c.lifespan += 5;
-          } else c.lifespan -= 1;
+            if (c.lifespan < CELL_LIFESPAN_MAX * 2) c.lifespan += CELL_LIFESPAN_INCREMENT;
+          } else c.lifespan += CELL_LIFESPAN_DECREMENT;
 
-          if (c.lifespan < 10) c.floodID = -1;
+          if (c.lifespan < 0) {
+            parent.size--;
+            c.floodID = -1;
+          }
         }
 
-        frame.pixels[c.x + c.y * w] = color(255 - c.lifespan, 10);
+        float t = norm(c.lifespan, 0, CELL_LIFESPAN_MAX);
+        // println(t);
+        frame.pixels[c.x + c.y * w] = lerpColor(COLOR_DEAD, COLOR_ALIVE, t);
       }
 
     }
@@ -96,14 +122,18 @@ void touch(float x, float y, boolean dynamic) {
     if (floodID < 0) {
       Flood f = new Flood(maze, maze.floods.size(), i, j);
       maze.floods.add(f);
-      f.step();
+      f.grow(GROW_RATE_MAX);
     } else if (dynamic) {
       // if hovered cell is in a flood, grow it
       Flood f = maze.floods.get(floodID);
       if (f != null) {
         f.active = true;
         if (f.done) f.cheat();
-        else f.step();
+        else {
+          // the flood grow faster if smaller
+          float growRate = map(f.size, 0, maze.cells.length, GROW_RATE_MAX, GROW_RATE_MIN);
+          f.grow(growRate);
+        }
       }
     }
   }
