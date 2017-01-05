@@ -1,9 +1,9 @@
 // global options, see README for details
 boolean FULLSCREEN = false;
-boolean DEBUG = true;
+boolean DEBUG = false;
 
 color COLOR_ALIVE = color(0, 0, 0, 255);
-color COLOR_DEAD  = color(255, 200, 200, -100);
+color COLOR_DEAD  = color(255, 200, 200, 0);
 
 int CELL_LIFESPAN_MAX = 255;
 int CELL_LIFESPAN_DEATH = 200;
@@ -11,7 +11,7 @@ int CELL_LIFESPAN_START = 100;
 int CELL_LIFESPAN_INCREMENT = +5;
 int CELL_LIFESPAN_DECREMENT = -1;
 
-float GROW_RATE_MIN = 0.5;
+float GROW_RATE_MIN = 0.3;
 float GROW_RATE_MAX = 1.0;
 
 // -------------------------------------------------------------------------
@@ -126,7 +126,7 @@ void touch(float x, float y, boolean dynamic) {
     } else if (dynamic) {
       // if hovered cell is in a flood, grow it
       Flood f = maze.floods.get(floodID);
-      if (f != null) {
+      if (f != null && !f.active) {
         f.active = true;
         if (f.done) f.cheat();
         else {
