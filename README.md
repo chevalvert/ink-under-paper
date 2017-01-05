@@ -20,5 +20,6 @@
 | `CELL_LIFESPAN_START`     | _the start value of a newborn cell_
 | `CELL_LIFESPAN_INCREMENT` | _how fast the cell's life increases_
 | `CELL_LIFESPAN_DECREMENT` | _how fast the cell's life decreases_
+| `GROW_RATE_THRESHOLD`     | _the percent of max screen occupation_
 | `GROW_RATE_MIN`           | _the minimum growing rate of a flood (between 0 and 1)_
 | `GROW_RATE_MAX`           | _the maximum growing rate of a flood (between 0 and 1)_

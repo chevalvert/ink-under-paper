@@ -11,6 +11,7 @@ int CELL_LIFESPAN_START = 100;
 int CELL_LIFESPAN_INCREMENT = +5;
 int CELL_LIFESPAN_DECREMENT = -1;
 
+float GROW_RATE_THRESHOLD = 0.3;
 float GROW_RATE_MIN = 0.3;
 float GROW_RATE_MAX = 1.0;
 
@@ -131,7 +132,8 @@ void touch(float x, float y, boolean dynamic) {
         if (f.done) f.cheat();
         else {
           // the flood grow faster if smaller
-          float growRate = map(f.size, 0, maze.cells.length, GROW_RATE_MAX, GROW_RATE_MIN);
+          float maxSize = maze.cells.length * GROW_RATE_THRESHOLD;
+          float growRate = map(min(f.size, maxSize), 0, maxSize, GROW_RATE_MAX, GROW_RATE_MIN);
           f.grow(growRate);
         }
       }
