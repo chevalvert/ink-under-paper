@@ -8,6 +8,7 @@ boolean SMT_MIRROR_Y = false;
 color COLOR_ALIVE = color(0, 0, 0, 255);
 color COLOR_DEAD  = color(255, 200, 200, 0);
 
+int CELL_RESOLUTION = 10;
 int CELL_LIFESPAN_MAX = 255;
 int CELL_LIFESPAN_DEATH = 200;
 int CELL_LIFESPAN_START = 100;
@@ -35,8 +36,8 @@ void setup() {
   smtosc = new SMTOSC(this, "127.0.0.1", 12000);
 
   // maze generation
-  int cols = int(width / 10);
-  int rows = int(height / 10);
+  int cols = int(width / CELL_RESOLUTION);
+  int rows = int(height / CELL_RESOLUTION);
   maze = new Maze(cols, rows, int(cols / 2), 0);
 
   // ultra fast offscren pixels update

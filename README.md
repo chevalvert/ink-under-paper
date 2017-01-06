@@ -17,6 +17,7 @@
 | `SMT_MIRROR_Y`            | _mirror the SMT on the Y axis_
 | `COLOR_ALIVE`             | _cell's color when alive_
 | `COLOR_DEAD `             | _cell's color when dying_
+| `CELL_RESOLUTION`         | _the cell's size in pixels_
 | `CELL_LIFESPAN_MAX`       | _the cell will grow until reaching this value_
 | `CELL_LIFESPAN_DEATH`     | _the cell will be considered dead bellow this value_
 | `CELL_LIFESPAN_START`     | _the start value of a newborn cell_
