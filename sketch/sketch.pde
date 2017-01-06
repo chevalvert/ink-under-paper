@@ -1,6 +1,9 @@
 // global options, see README for details
-boolean FULLSCREEN = false;
+boolean FULLSCREEN = true;
 boolean DEBUG = false;
+
+boolean SMT_MIRROR_X = false;
+boolean SMT_MIRROR_Y = false;
 
 color COLOR_ALIVE = color(0, 0, 0, 255);
 color COLOR_DEAD  = color(255, 200, 200, 0);

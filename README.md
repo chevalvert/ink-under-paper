@@ -13,6 +13,8 @@
 | :------------------------ | :---------- |
 | `FULLSCREEN`              | _launch the sketch in fullscreen_
 | `DEBUG`                   | _enable debug trace_
+| `SMT_MIRROR_X`            | _mirror the SMT on the X axis_
+| `SMT_MIRROR_Y`            | _mirror the SMT on the Y axis_
 | `COLOR_ALIVE`             | _cell's color when alive_
 | `COLOR_DEAD `             | _cell's color when dying_
 | `CELL_LIFESPAN_MAX`       | _the cell will grow until reaching this value_

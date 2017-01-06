@@ -51,6 +51,9 @@ public void oscEvent(OscMessage message) {
         float x = message.get(1).floatValue();
         float y = message.get(2).floatValue();
 
+        if (SMT_MIRROR_X) x = 1 - x;
+        if (SMT_MIRROR_Y) y = 1 - y;
+
         smtosc.move(id, int(x * width), int(y * height));
         if (DEBUG) println(x + ", " + y);
       }
