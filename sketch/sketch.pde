@@ -1,6 +1,6 @@
 // global options, see README for details
-final boolean FULLSCREEN = false;
-final boolean DEBUG = true;
+final boolean FULLSCREEN = true;
+final boolean DEBUG = false;
 
 final boolean SMT_MIRROR_X = false;
 final boolean SMT_MIRROR_Y = false;
