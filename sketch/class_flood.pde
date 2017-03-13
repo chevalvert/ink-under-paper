@@ -99,7 +99,7 @@ class Flood {
       if (n != null) {
         if (n.floodID < 0) {
           if (!cell.walls[i]) arr.add(n);
-        } else if (n.floodID != this.ID && n.lifespan > CELL_LIFESPAN_DEATH) return n.floodID;
+        } else if (n.floodID != this.ID && n.lifespan > CELL_LIFESPAN_START) return n.floodID;
       }
     }
     return -1;
@@ -116,5 +116,14 @@ class Flood {
       this.maze.floods.set(id, null);
       return f.cells;
     } else return null;
+  }
+
+  // dissociate the given cell from this flood
+  // return the dissociated cell
+  public Cell dissociate (Cell c) {
+    this.size--;
+    this.cells.remove(c);
+    c.floodID = -1;
+    return c;
   }
 }

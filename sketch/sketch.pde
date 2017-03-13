@@ -1,23 +1,22 @@
 // global options, see README for details
-boolean FULLSCREEN = true;
-boolean DEBUG = false;
+final boolean FULLSCREEN = false;
+final boolean DEBUG = true;
 
-boolean SMT_MIRROR_X = false;
-boolean SMT_MIRROR_Y = false;
+final boolean SMT_MIRROR_X = false;
+final boolean SMT_MIRROR_Y = false;
 
-color COLOR_ALIVE = color(0, 0, 0, 255);
-color COLOR_DEAD  = color(255, 200, 200, 0);
+final color COLOR_ALIVE = color(0, 0, 0, 255);
+final color COLOR_DEAD  = color(255, 200, 200, 0);
 
-int CELL_RESOLUTION = 10;
-int CELL_LIFESPAN_MAX = 255;
-int CELL_LIFESPAN_DEATH = 200;
-int CELL_LIFESPAN_START = 100;
-int CELL_LIFESPAN_INCREMENT = +5;
-int CELL_LIFESPAN_DECREMENT = -1;
+final int CELL_RESOLUTION = 10;
+final int CELL_LIFESPAN_MAX = 500;
+final int CELL_LIFESPAN_START = 200;
+final int CELL_LIFESPAN_INCREMENT = +5;
+final int CELL_LIFESPAN_DECREMENT = -1;
 
-float GROW_RATE_THRESHOLD = 0.3;
-float GROW_RATE_MIN = 0.3;
-float GROW_RATE_MAX = 1.0;
+final float GROW_RATE_THRESHOLD = 0.3;
+final float GROW_RATE_MIN = 0.3;
+final float GROW_RATE_MAX = 1.0;
 
 // -------------------------------------------------------------------------
 
@@ -27,7 +26,7 @@ SMTOSC smtosc;
 
 void settings() {
   if (FULLSCREEN) fullScreen(OPENGL);
-  else size(displayWidth - 100, displayHeight - 50, OPENGL);
+  else size(800, 600, OPENGL);
 }
 
 void setup() {
@@ -86,24 +85,24 @@ void draw() {
     frame.loadPixels();
     int w = frame.width;
     for (Cell c : maze.cells) {
-      // display only flooded cell
       if (c.floodID >= 0) {
-
-        // update cell lifespan
         Flood parent = maze.floods.get(c.floodID);
+
         if (parent != null) {
-          if (parent.active) {
-            if (c.lifespan < CELL_LIFESPAN_MAX * 2) c.lifespan += CELL_LIFESPAN_INCREMENT;
-          } else c.lifespan += CELL_LIFESPAN_DECREMENT;
+          // grow cell
+          if (parent.active) c.grow();
 
-          if (c.lifespan < 0) {
-            parent.size--;
-            c.floodID = -1;
-          }
+          // dissociate cell from its parent flood
+          if (c.lifespan < CELL_LIFESPAN_START - 1) parent.dissociate(c);
         }
+      }
 
-        float t = norm(c.lifespan, 0, CELL_LIFESPAN_MAX);
-        // println(t);
+      // ungrow cell
+      c.die();
+
+      // display only alive cell
+      if (c.lifespan > 0) {
+        float t = norm(c.lifespan, 0, 255);
         frame.pixels[c.x + c.y * w] = lerpColor(COLOR_DEAD, COLOR_ALIVE, t);
       }
 

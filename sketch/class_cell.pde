@@ -1,6 +1,6 @@
 public class Cell {
   public int x, y, floodID;
-  public int lifespan = CELL_LIFESPAN_START;
+  public int lifespan = 0;
 
   public boolean visited;
   public boolean[] walls;
@@ -23,5 +23,14 @@ public class Cell {
     c.walls = this.walls;
     c.source = this.source;
     return c;
+  }
+
+  public void die () { this.die(CELL_LIFESPAN_DECREMENT); }
+  public void die (int amt) {
+    if (this.lifespan > 0) this.lifespan += amt;
+  }
+
+  public void grow () {
+    if (this.lifespan < CELL_LIFESPAN_MAX) this.lifespan += CELL_LIFESPAN_INCREMENT;
   }
 }

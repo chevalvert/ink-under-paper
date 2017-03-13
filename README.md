@@ -19,8 +19,7 @@
 | `COLOR_DEAD `             | _cell's color when dying_
 | `CELL_RESOLUTION`         | _the cell's size in pixels_
 | `CELL_LIFESPAN_MAX`       | _the cell will grow until reaching this value_
-| `CELL_LIFESPAN_DEATH`     | _the cell will be considered dead bellow this value_
-| `CELL_LIFESPAN_START`     | _the start value of a newborn cell_
+| `CELL_LIFESPAN_START`     | _the start value of a newborn cell<br>(the cell will be considered dead bellow this value)_
 | `CELL_LIFESPAN_INCREMENT` | _how fast the cell's life increases_
 | `CELL_LIFESPAN_DECREMENT` | _how fast the cell's life decreases_
 | `GROW_RATE_THRESHOLD`     | _the percent of max screen occupation_
